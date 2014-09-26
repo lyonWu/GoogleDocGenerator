@@ -129,11 +129,7 @@ public class Catcher {
 					caseNameColList.add(1);
 					linkRowList.add(0);
 					linkColList.add(2);
-					// buildNum = buildNumList.get(i);
-					// System.out.println("-----#####-----This is " + buildNum
-					// + " script log-----#####-----");
-					// sheetNum = i;
-				}
+  				  }
 				Catcher.chooseComponent();
 			} else {
 				System.out.println("-----Build-model: sample model-----");
