@@ -26,6 +26,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Catcher {
+	static String os = null;
+
+	public static void setOs(String os) {
+		Catcher.os = os;
+	}
+
 	static WebDriver wd = null;
 	static WebElement we = null;
 	static String component = "";
@@ -45,6 +51,7 @@ public class Catcher {
 	static String model_b = "false";
 	static String model_f = "false";
 	static String model_m = "false";
+	static String model_r = "false";
 	static String buildNumlist_parameter = "";
 	static String free_cases = "";
 	static int start = 0;
@@ -115,8 +122,15 @@ public class Catcher {
 			if (file == null) {
 				file.mkdirs();
 			}
-			file = new File("out-put-result\\" + currentDate + "-"
-					+ currentTime + ".xls");
+			System.out.println("The os is "+os);
+			if (os != null && os.equals("Linux")) {
+				file = new File("out-put-result/" + currentDate + "-"
+						+ currentTime + ".xls");
+			} else if (os != null && os.equals("Windows")) {
+				file = new File("out-put-result\\" + currentDate + "-"
+						+ currentTime + ".xls");
+			}
+			
 
 			wwb = init(file);
 
@@ -129,7 +143,7 @@ public class Catcher {
 					caseNameColList.add(1);
 					linkRowList.add(0);
 					linkColList.add(2);
-  				  }
+				}
 				Catcher.chooseComponent();
 			} else {
 				System.out.println("-----Build-model: sample model-----");
@@ -156,6 +170,7 @@ public class Catcher {
 
 			if (redoList.get(0).size() != 0) {
 				try {
+
 					redo();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -228,6 +243,7 @@ public class Catcher {
 	}
 
 	public static void redo() throws Exception {
+		model_r = "true";
 		System.out.println("##############################################");
 		System.out.println("This is redo-list " + redoList.get(1).toString());
 		String redoTemp = "";
@@ -289,7 +305,7 @@ public class Catcher {
 
 	public static void free_toChooseBuild(String free_cases) throws Exception {
 		List<String> list = new ArrayList<String>();
-		if (model_f != null && model_f.equals("true")) {
+		if (model_r != null && model_r.equals("true")) {
 			list = divideFreeCases_redo(free_cases);
 		} else {
 			list = divideFreeCases(free_cases);
@@ -346,7 +362,7 @@ public class Catcher {
 			list.add(tname);
 		}
 
-		System.out.println("The free-cases list is " + list.toString());
+		System.out.println("The free-cases-redo list is " + list.toString());
 		return list;
 
 	}
