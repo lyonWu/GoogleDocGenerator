@@ -27,7 +27,7 @@ public class DocPanel extends JFrame {
 	private static final long serialVersionUID = 1L;
 	GridBagConstraints c = new GridBagConstraints();
 	JTextField ffURL = new JTextField(
-			"https://build.liferay.com/2/view/test-portal-fixpack-frontend-tomcat-mysql%28ee-6.2.10_6.2.10.9%29/");
+			Catcher.getUrl());
 	JTextField buildNum = new JTextField("#number");
 	JTextField begin_line = new JTextField("3");
 	JTextField buildNumList = new JTextField("#number/#number/(the last \""
@@ -92,11 +92,14 @@ public class DocPanel extends JFrame {
 
 		b_model.addItem("Simple Mode");
 		b_model.addItem("Mutiple Mode(default mode only)");
+		b_model.setSelectedIndex(0);
 		c_model.addItem("Default Mode");
 		c_model.addItem("Break Mode");
 		c_model.addItem("Free Mode");
+		c_model.setSelectedIndex(0);
 		os.addItem("Windows");
 		os.addItem("Linux");
+		os.setSelectedIndex(1);
 
 		// 0,0
 		c.gridx = 0;
@@ -234,7 +237,13 @@ public class DocPanel extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-
+				if (os.getSelectedIndex() == 0) {
+//					System.out.println("windows");
+					Catcher.setOs(os.getItemAt(0));
+				} else if (os.getSelectedIndex() == 1) {
+//					System.out.println("linux");
+					Catcher.setOs(os.getItemAt(1));
+				}
 				if (c_model.getSelectedIndex() == 0) {
 					if (b_model.getSelectedIndex() == 0) {
 						init_model();

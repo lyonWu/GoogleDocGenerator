@@ -20,10 +20,13 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
+import util.LogGenerator;
 
 public class Catcher {
 	static String os = null;
@@ -31,7 +34,22 @@ public class Catcher {
 	public static void setOs(String os) {
 		Catcher.os = os;
 	}
+	static WebDriver wd_c=null;
+	public static String getUrl() {
+		InputStream in_t = null;
+		Properties p_t = new Properties();
+		File file_t = new File("test.properties");
+		try {
+			
+			in_t = new BufferedInputStream(new FileInputStream(file_t));
+			p_t.load(in_t);
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 url = p_t.getProperty("url");
+		return url;
+	}
 	static WebDriver wd = null;
 	static WebElement we = null;
 	static String component = "";
@@ -60,9 +78,11 @@ public class Catcher {
 	static String endName = "";
 	static int beginLine = 0;
 	static String url = "";
+	static String log_url="";
 	static boolean redo = true;
 	static List<List<String>> redoList = new ArrayList<List<String>>();
 	static int sheetNum = 0;
+	
 
 	public static void setBuildNumlist_parameter(String buildNumlist_parameter) {
 		Catcher.buildNumlist_parameter = buildNumlist_parameter;
@@ -122,6 +142,7 @@ public class Catcher {
 			if (file == null) {
 				file.mkdirs();
 			}
+			
 			System.out.println("The os is "+os);
 			if (os != null && os.equals("Linux")) {
 				file = new File("out-put-result/" + currentDate + "-"
@@ -153,7 +174,6 @@ public class Catcher {
 				caseNameColList.add(1);
 				linkRowList.add(0);
 				linkColList.add(2);
-				// System.out.println(1111);
 
 				Catcher.chooseComponent();
 			}
@@ -206,6 +226,7 @@ public class Catcher {
 		redoList.add(new ArrayList<String>());
 
 		// url = p.getProperty("url");
+		log_url=p.getProperty("log-file");
 		String dir = p.getProperty("dir");
 		// model_b = p.getProperty("break-model");
 		// model_f = p.getProperty("free-model");
@@ -229,8 +250,16 @@ public class Catcher {
 		wd = new FirefoxDriver();
 		wd.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		wd.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS);
-
+		wd.manage().window().setPosition(new org.openqa.selenium.Point(0, 0));
+		wd.manage().window().setSize(new Dimension(1000, 1000));
+		wd_c=new FirefoxDriver();
+		wd_c.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		wd_c.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS);
+		wd_c.manage().window().setPosition(new org.openqa.selenium.Point(1500, 0));
+		wd_c.manage().window().setSize(new Dimension(1000, 1000));
+		
 		wd.navigate().to(url);
+		wd_c.navigate().to(log_url);
 
 	}
 
@@ -329,6 +358,9 @@ public class Catcher {
 					table_list.get(i).click();
 					we = table_list.get(i);
 
+					//add component table on log window
+					LogGenerator.addComponent(wd_c, we,component);
+					
 					Catcher.chooseBuild();
 
 				}
@@ -405,7 +437,10 @@ public class Catcher {
 				} else {
 					System.out.println("-----this component should be checked");
 					we.click();
-
+					
+					//add component table on log window
+					LogGenerator.addComponent(wd_c, we,component);
+					
 					if (model_m != null && model_m.equals("true")) {
 						Catcher.chooseMutipleBuild();
 					} else {
@@ -572,6 +607,12 @@ public class Catcher {
 			if (flag.equals("Success ")) {
 				continue;
 			} else if (flag.equals("Failed ")) {
+				//add new error-case entry on log window
+				LogGenerator.addErrorCase(wd_c,  component, caseName);
+				//change its case-status to Failed
+				LogGenerator.changeCaseStatus(wd_c,  component, "Failed");
+			
+				
 				we.click();
 				System.out.print("The error case is " + caseName);
 				write(wwb, caseNameColList.get(a), caseNameRowList.get(a),
@@ -583,12 +624,24 @@ public class Catcher {
 				componetLink = wd.getCurrentUrl();
 
 				System.out.println("--------record case link");
+				
+				//change its write-status to Record
+				LogGenerator.changeWriteStatus(wd_c, component, "Record");
+				//change its build-num to #{num}
+				LogGenerator.changeBuildNum(wd_c, component, buildNum);
+				
 				write(wwb, linkColList.get(a), linkRowList.get(a), componetLink);
 				linkRowList.set(a, linkRowList.get(a) + 1);
 				// linkRow++;
 
 				wd.navigate().back();
 			} else if (flag.equals("Unstable ")) {
+				//add new error-case entry on log window
+				LogGenerator.addErrorCase(wd_c,  component, caseName);
+				//change its case-status to Unstable
+				LogGenerator.changeCaseStatus(wd_c,  component, "Unstable");
+				
+				
 				we.click();
 				System.out.print("The error case is " + caseName);
 				write(wwb, caseNameColList.get(a), caseNameRowList.get(a),
@@ -599,6 +652,12 @@ public class Catcher {
 				componetLink = wd.getCurrentUrl();
 
 				System.out.println("--------record case link");
+				
+				//change its write-status to Record
+				LogGenerator.changeWriteStatus(wd_c,  component, "Record");
+				//change its build-num to #{num}
+				LogGenerator.changeBuildNum(wd_c, component, buildNum);
+				
 				write(wwb, linkColList.get(a), linkRowList.get(a), componetLink);
 				linkRowList.set(a, linkRowList.get(a) + 1);
 
@@ -643,5 +702,13 @@ public class Catcher {
 		WritableWorkbook wwb = Workbook.createWorkbook(file);
 		return wwb;
 
+	}
+	
+	public static void pause() throws InterruptedException{
+		wd.wait();
+	}
+	
+	public static void continue_(){
+		wd.notify();
 	}
 }
