@@ -30,12 +30,10 @@ public class DocPanel extends JFrame {
 			Catcher.getUrl());
 	JTextField buildNum = new JTextField("#number");
 	JTextField begin_line = new JTextField("3");
-	JTextField buildNumList = new JTextField("#number/#number/(the last \""
-			+ "/" + "\" is important)");
+	JTextField buildNumList = new JTextField("#number,#number");
 	JTextField startComponent = new JTextField("portal-component-name");
 	JTextField endComponent = new JTextField("portal-component-name");
-	JTextField freecase = new JTextField("name/name/(the last \"" + "/"
-			+ "\" is important)");
+	JTextField freecase = new JTextField("name,name");
 	JButton run_button = new JButton("Start");
 	JComboBox<String> b_model = new JComboBox<String>();
 	JComboBox<String> c_model = new JComboBox<String>();
@@ -78,7 +76,7 @@ public class DocPanel extends JFrame {
 	public void init() {
 		setTitle("GoogleDocGenarator");
 		setLocation(300, 300);
-		setSize(500, 300);
+		setSize(600, 300);
 		setResizable(false);
 		setPreferredSize(new Dimension(250, 250));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -206,6 +204,26 @@ public class DocPanel extends JFrame {
 				}
 			}
 		});
+		
+		b_model.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// detail_panel
+				if(b_model.getSelectedIndex()==0){
+					if(c_model.getSelectedIndex()==0){
+						defaultMode_s();
+					}else if(c_model.getSelectedIndex()==1){
+						breakMode();
+					}else{
+						freeMode();
+					}
+				}else{
+					c_model.setSelectedIndex(0);
+					defaultMode_m();
+				}
+			}
+		});
 	}
 
 	private void init_model() {
@@ -286,12 +304,14 @@ public class DocPanel extends JFrame {
 		detail_panel.revalidate();
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("Build Number(Simple):"), c);
 		c.gridx = 1;
 		c.weightx = 1;
 		detail_panel.add(buildNum, c);
 		c.gridx = 0;
 		c.gridy = 1;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("Free Component List:"), c);
 		c.gridx = 1;
 		c.weightx = 1;
@@ -304,18 +324,21 @@ public class DocPanel extends JFrame {
 		detail_panel.revalidate();
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("Build Number(Simple):"), c);
 		c.gridx = 1;
 		c.weightx = 1;
 		detail_panel.add(buildNum, c);
 		c.gridx = 0;
 		c.gridy = 1;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("Start Component:"), c);
 		c.gridx = 1;
 		c.weightx = 1;
 		detail_panel.add(startComponent, c);
 		c.gridx = 0;
 		c.gridy = 2;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("End Component:"), c);
 		c.gridx = 1;
 		c.weightx = 1;
@@ -327,6 +350,7 @@ public class DocPanel extends JFrame {
 		detail_panel.revalidate();
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("Build Number(Mutiple):"), c);
 		c.gridx = 1;
 		c.weightx = 1;
@@ -346,6 +370,7 @@ public class DocPanel extends JFrame {
 		detail_panel.revalidate();
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weightx = 0;
 		detail_panel.add(new JLabel("Build Number(Simple):"), c);
 		c.gridx = 1;
 		c.weightx = 1;

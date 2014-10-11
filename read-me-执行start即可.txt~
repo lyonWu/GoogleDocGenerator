@@ -18,6 +18,3 @@
 更改连续作业模式workflow，使用并发遍历代替串行遍历。
 更改重做机制，在当前component抛出异常时，先跳过当前component并记录，之后在每个build-num作业中，重做一次。
 增加GUI操作界面
-
-1.6 version
-加入GUI日志页面，改进freecase与multiple参数输入模式（以","取代"/"，同时也不需要最后一个符号了）

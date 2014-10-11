@@ -13,8 +13,6 @@ public class LogGenerator {
 	
 	public static void addErrorCase(WebDriver wd,  String name, String errorcase){
 		JavascriptExecutor execute = (JavascriptExecutor) wd;
-		String temp="addErrorCase('"+name+"','"+errorcase+"');";
-		System.out.println(temp);
 		execute.executeScript("addErrorCase('"+name+"','"+errorcase+"');");
 	}
 	

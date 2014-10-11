@@ -34,22 +34,25 @@ public class Catcher {
 	public static void setOs(String os) {
 		Catcher.os = os;
 	}
-	static WebDriver wd_c=null;
+
+	static WebDriver wd_c = null;
+
 	public static String getUrl() {
 		InputStream in_t = null;
 		Properties p_t = new Properties();
 		File file_t = new File("test.properties");
 		try {
-			
+
 			in_t = new BufferedInputStream(new FileInputStream(file_t));
 			p_t.load(in_t);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 url = p_t.getProperty("url");
+		url = p_t.getProperty("url");
 		return url;
 	}
+
 	static WebDriver wd = null;
 	static WebElement we = null;
 	static String component = "";
@@ -78,11 +81,10 @@ public class Catcher {
 	static String endName = "";
 	static int beginLine = 0;
 	static String url = "";
-	static String log_url="";
+	static String log_url = "";
 	static boolean redo = true;
 	static List<List<String>> redoList = new ArrayList<List<String>>();
 	static int sheetNum = 0;
-	
 
 	public static void setBuildNumlist_parameter(String buildNumlist_parameter) {
 		Catcher.buildNumlist_parameter = buildNumlist_parameter;
@@ -142,8 +144,8 @@ public class Catcher {
 			if (file == null) {
 				file.mkdirs();
 			}
-			
-			System.out.println("The os is "+os);
+
+			System.out.println("The os is " + os);
 			if (os != null && os.equals("Linux")) {
 				file = new File("out-put-result/" + currentDate + "-"
 						+ currentTime + ".xls");
@@ -151,7 +153,6 @@ public class Catcher {
 				file = new File("out-put-result\\" + currentDate + "-"
 						+ currentTime + ".xls");
 			}
-			
 
 			wwb = init(file);
 
@@ -226,7 +227,7 @@ public class Catcher {
 		redoList.add(new ArrayList<String>());
 
 		// url = p.getProperty("url");
-		log_url=p.getProperty("log-file");
+		log_url = p.getProperty("log-file");
 		String dir = p.getProperty("dir");
 		// model_b = p.getProperty("break-model");
 		// model_f = p.getProperty("free-model");
@@ -252,12 +253,13 @@ public class Catcher {
 		wd.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS);
 		wd.manage().window().setPosition(new org.openqa.selenium.Point(0, 0));
 		wd.manage().window().setSize(new Dimension(1000, 1000));
-		wd_c=new FirefoxDriver();
+		wd_c = new FirefoxDriver();
 		wd_c.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		wd_c.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS);
-		wd_c.manage().window().setPosition(new org.openqa.selenium.Point(1500, 0));
+		wd_c.manage().window()
+				.setPosition(new org.openqa.selenium.Point(1500, 0));
 		wd_c.manage().window().setSize(new Dimension(1000, 1000));
-		
+
 		wd.navigate().to(url);
 		wd_c.navigate().to(log_url);
 
@@ -358,9 +360,9 @@ public class Catcher {
 					table_list.get(i).click();
 					we = table_list.get(i);
 
-					//add component table on log window
-					LogGenerator.addComponent(wd_c, we,component);
-					
+					// add component table on log window
+					LogGenerator.addComponent(wd_c, we, component);
+
 					Catcher.chooseBuild();
 
 				}
@@ -371,12 +373,11 @@ public class Catcher {
 
 	public static List<String> divideFreeCases(String fc) {
 		List<String> list = new ArrayList<String>();
-		String tname;
 		String t_fc = fc;
-		while (!(t_fc.indexOf("/") == -1)) {
-			tname = t_fc.substring(0, t_fc.indexOf("/"));
-			t_fc = t_fc.substring(t_fc.indexOf("/") + 1);
-			list.add("portal-" + tname);
+		String[] temp = t_fc.split(",");
+
+		for (String s : temp) {
+			list.add("portal-" + s);
 		}
 
 		System.out.println("The free-cases list is " + list.toString());
@@ -386,12 +387,12 @@ public class Catcher {
 
 	public static List<String> divideFreeCases_redo(String fc) {
 		List<String> list = new ArrayList<String>();
-		String tname;
 		String t_fc = fc;
-		while (!(t_fc.indexOf("/") == -1)) {
-			tname = t_fc.substring(0, t_fc.indexOf("/"));
-			t_fc = t_fc.substring(t_fc.indexOf("/") + 1);
-			list.add(tname);
+
+		String[] temp = t_fc.split(",");
+
+		for (String s : temp) {
+			list.add( s);
 		}
 
 		System.out.println("The free-cases-redo list is " + list.toString());
@@ -401,13 +402,15 @@ public class Catcher {
 
 	public static List<String> divideBuildNumList(String bnl) {
 		List<String> list = new ArrayList<String>();
-		String tname;
 		String t_fc = bnl;
-		while (!(t_fc.indexOf("/") == -1)) {
-			tname = t_fc.substring(0, t_fc.indexOf("/"));
-			t_fc = t_fc.substring(t_fc.indexOf("/") + 1);
-			list.add(tname);
+		
+        String[] temp=t_fc.split(",");
+		
+		for(String s:temp){
+			list.add(s);
 		}
+		
+	
 
 		System.out.println("The build-num list is " + list.toString());
 		return list;
@@ -430,17 +433,18 @@ public class Catcher {
 				if (component.equals("portal-known-issues")
 						|| component.equals("portal-tools")
 						|| component.equals("portal-upgrades")
-						|| component.equals("portal-business-productivity-ee")) {
+						|| component.equals("portal-business-productivity-ee")
+						|| component.equals("document-management-ee")) {
 					System.out.println("-----this component should be passed");
 					System.out.println("");
 					continue;
 				} else {
 					System.out.println("-----this component should be checked");
 					we.click();
-					
-					//add component table on log window
-					LogGenerator.addComponent(wd_c, we,component);
-					
+
+					// add component table on log window
+					LogGenerator.addComponent(wd_c, we, component);
+
 					if (model_m != null && model_m.equals("true")) {
 						Catcher.chooseMutipleBuild();
 					} else {
@@ -607,12 +611,11 @@ public class Catcher {
 			if (flag.equals("Success ")) {
 				continue;
 			} else if (flag.equals("Failed ")) {
-				//add new error-case entry on log window
-				LogGenerator.addErrorCase(wd_c,  component, caseName);
-				//change its case-status to Failed
-				LogGenerator.changeCaseStatus(wd_c,  component, "Failed");
-			
-				
+				// add new error-case entry on log window
+				LogGenerator.addErrorCase(wd_c, component, caseName);
+				// change its case-status to Failed
+				LogGenerator.changeCaseStatus(wd_c, component, "Failed");
+
 				we.click();
 				System.out.print("The error case is " + caseName);
 				write(wwb, caseNameColList.get(a), caseNameRowList.get(a),
@@ -624,24 +627,23 @@ public class Catcher {
 				componetLink = wd.getCurrentUrl();
 
 				System.out.println("--------record case link");
-				
-				//change its write-status to Record
+
+				// change its write-status to Record
 				LogGenerator.changeWriteStatus(wd_c, component, "Record");
-				//change its build-num to #{num}
+				// change its build-num to #{num}
 				LogGenerator.changeBuildNum(wd_c, component, buildNum);
-				
+
 				write(wwb, linkColList.get(a), linkRowList.get(a), componetLink);
 				linkRowList.set(a, linkRowList.get(a) + 1);
 				// linkRow++;
 
 				wd.navigate().back();
 			} else if (flag.equals("Unstable ")) {
-				//add new error-case entry on log window
-				LogGenerator.addErrorCase(wd_c,  component, caseName);
-				//change its case-status to Unstable
-				LogGenerator.changeCaseStatus(wd_c,  component, "Unstable");
-				
-				
+				// add new error-case entry on log window
+				LogGenerator.addErrorCase(wd_c, component, caseName);
+				// change its case-status to Unstable
+				LogGenerator.changeCaseStatus(wd_c, component, "Unstable");
+
 				we.click();
 				System.out.print("The error case is " + caseName);
 				write(wwb, caseNameColList.get(a), caseNameRowList.get(a),
@@ -652,12 +654,12 @@ public class Catcher {
 				componetLink = wd.getCurrentUrl();
 
 				System.out.println("--------record case link");
-				
-				//change its write-status to Record
-				LogGenerator.changeWriteStatus(wd_c,  component, "Record");
-				//change its build-num to #{num}
+
+				// change its write-status to Record
+				LogGenerator.changeWriteStatus(wd_c, component, "Record");
+				// change its build-num to #{num}
 				LogGenerator.changeBuildNum(wd_c, component, buildNum);
-				
+
 				write(wwb, linkColList.get(a), linkRowList.get(a), componetLink);
 				linkRowList.set(a, linkRowList.get(a) + 1);
 
@@ -703,12 +705,12 @@ public class Catcher {
 		return wwb;
 
 	}
-	
-	public static void pause() throws InterruptedException{
+
+	public static void pause() throws InterruptedException {
 		wd.wait();
 	}
-	
-	public static void continue_(){
+
+	public static void continue_() {
 		wd.notify();
 	}
 }
