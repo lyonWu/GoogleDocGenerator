@@ -1,5 +1,5 @@
 # job link
-url=https://build.liferay.com/2/view/test-portal-fixpack-frontend-tomcat-mysql%28ee-6.2.10_6.2.10.9%29/
+url=https://build.liferay.com/2/view/test-portal-fixpack%28ee-6.2.10_6.2.10.9%29/job/test-portal-fixpack-frontend-tomcat-mysql%28ee-6.2.10_6.2.10.9%29/
 
 # FF uri
 dir=/opt/firefox3/firefox
