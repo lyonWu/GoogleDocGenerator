@@ -281,8 +281,10 @@ public class Catcher {
 
 		for (String s : redoList.get(1)) {
 			redoTemp += s;
-			redoTemp += "/";
+			redoTemp += ",";
 		}
+		
+		redoTemp=redoTemp.substring(0, redoTemp.length()-1);
 		System.out.println("This is redo-list: " + redoTemp);
 
 		Catcher.free_toChooseBuild(redoTemp);
@@ -434,7 +436,7 @@ public class Catcher {
 						|| component.equals("portal-tools")
 						|| component.equals("portal-upgrades")
 						|| component.equals("portal-business-productivity-ee")
-						|| component.equals("document-management-ee")) {
+						|| component.equals("portal-document-management-ee")) {
 					System.out.println("-----this component should be passed");
 					System.out.println("");
 					continue;
